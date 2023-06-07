@@ -1,30 +1,56 @@
-import '../../pages/auth/FormStyles.scss';
+import './FormStyles.scss';
 
+// import axios from 'axios';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useState } from 'react';
-import * as Yup from 'yup';
 
+import api from '../../api';
 import eye from '../../icons/eye-off.svg';
+import { registerSchema } from '../../yupValidation';
 
-const registerSchema = Yup.object().shape({
-  fullName: Yup.string().required('Enter fullname'),
-  userName: Yup.string().required('Enter username'),
-  password: Yup.string().required('Enter password'),
-  confirmPassword: Yup.string().required('Repeat password'),
-});
+type SignUpValues = {
+  fullName: string;
+  userName: string;
+  password: string;
+  confirmPassword: string;
+};
 
 function SignUp() {
   const [isVisiblePassword, setIsVisiblePassword] = useState(true);
+  const [isVisibleConfirmPassword, setIsVisibleConfirmPassword] = useState(true);
 
-  const handleSubmit = () => {
-    console.log('Відправлено: робити правильну логіку');
+  const submitSignUp = async (
+    values: SignUpValues,
+    { resetForm }: { resetForm: () => void },
+  ) => {
+    const { userName, password, fullName } = values;
+
+    try {
+      const response = await api.post('/auth/register', {
+        username: userName,
+        password: password,
+        displayName: fullName,
+      });
+      const tokens = await api.post('/auth/login', {
+        username: userName,
+        password: password,
+      });
+      const { accessToken, refreshToken } = tokens.data;
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+    } catch (error) {
+      console.log('???????errror????');
+    }
+
+    resetForm();
   };
 
   return (
     <Formik
       initialValues={{ fullName: '', userName: '', password: '', confirmPassword: '' }}
       validationSchema={registerSchema}
-      onSubmit={handleSubmit}
+      onSubmit={submitSignUp}
     >
       <Form className="form">
         <div className="form__input">
@@ -59,6 +85,7 @@ function SignUp() {
             name="password"
           />
           <button
+            type="button"
             className="form__input__eye"
             onClick={() => setIsVisiblePassword(!isVisiblePassword)}
           >
@@ -71,13 +98,14 @@ function SignUp() {
           <Field
             className="form__input__field"
             placeholder="***************"
-            type={isVisiblePassword ? 'password' : 'text'}
+            type={isVisibleConfirmPassword ? 'password' : 'text'}
             id="confirmPassword"
             name="confirmPassword"
           />
           <button
+            type="button"
             className="form__input__eye"
-            onClick={() => setIsVisiblePassword(!isVisiblePassword)}
+            onClick={() => setIsVisibleConfirmPassword(!isVisibleConfirmPassword)}
           >
             <img src={eye} alt="eye-off" />
           </button>

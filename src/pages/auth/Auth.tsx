@@ -2,8 +2,9 @@ import './Auth.scss';
 
 import { useState } from 'react';
 
-import SignIn from '../../components/signIn/SignIn';
-import SignUp from '../../components/signUp/SignUp';
+import Logo from '../../components/logo/Logo';
+import SignIn from '../../components/logIn/SignIn';
+import SignUp from '../../components/logIn/SignUp';
 
 function Auth() {
   const [isUser, setIsUser] = useState(true);
@@ -14,11 +15,7 @@ function Auth() {
 
   return (
     <div className="auth">
-      <div className="logo">
-        <div className="logo__name">InCode</div>
-        <div className="logo__unit">Finance</div>
-      </div>
-
+      <Logo />
       <div className="title">{isUser ? 'SIGN IN' : 'SIGN UP'}</div>
       {isUser ? <SignIn /> : <SignUp />}
 

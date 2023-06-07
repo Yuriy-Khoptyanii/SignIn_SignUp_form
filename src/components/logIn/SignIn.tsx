@@ -1,28 +1,49 @@
-import '../../pages/auth/FormStyles.scss';
+import './FormStyles.scss';
 
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useState } from 'react';
-import * as Yup from 'yup';
 
+import api from '../../api';
 import eye from '../../icons/eye-off.svg';
+import { LoginSchema } from '../../yupValidation';
 
-const LoginSchema = Yup.object().shape({
-  userName: Yup.string().required('Enter username'),
-  password: Yup.string().required('Enter password'),
-});
+type SignInValues = {
+  userName: string;
+  password: string;
+};
 
 function SignIn() {
   const [isVisiblePassword, setIsVisiblePassword] = useState(true);
 
-  const handleSubmit = () => {
-    console.log('Відправлено: робити правильну логіку');
+  const submitSignIn = async (
+    values: SignInValues,
+    { resetForm }: { resetForm: () => void },
+  ) => {
+    const { userName, password } = values;
+
+    try {
+      const tokens = await api.post('/auth/login', {
+        username: userName,
+        password: password,
+      });
+      const { accessToken, refreshToken } = tokens.data;
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+
+      console.log(tokens.data);
+    } catch (error) {
+      console.log('???????errror????');
+    }
+
+    resetForm();
   };
 
   return (
     <Formik
       initialValues={{ userName: '', password: '' }}
       validationSchema={LoginSchema}
-      onSubmit={handleSubmit}
+      onSubmit={submitSignIn}
     >
       <Form className="form">
         <div className="form__input">
@@ -46,6 +67,7 @@ function SignIn() {
             name="password"
           />
           <button
+            type="button"
             className="form__input__eye"
             onClick={() => setIsVisiblePassword(!isVisiblePassword)}
           >
