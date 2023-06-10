@@ -1,17 +1,17 @@
 import './Home.scss';
 
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import Logo from '../../components/logo/Logo';
 import decor from '../../icons/Decor.svg';
 import imgHome from '../../icons/imageHome.png';
+import { useAppDispatch } from '../../store';
 import { clearUser } from '../../store/auth/slice';
 import { fetchLogOut } from '../../store/auth/thunks';
 
 function Home() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleLogOut = async () => {
     dispatch(fetchLogOut())
