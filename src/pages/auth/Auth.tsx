@@ -2,9 +2,9 @@ import './Auth.scss';
 
 import { useState } from 'react';
 
-import Logo from '../../components/logo/Logo';
 import SignIn from '../../components/logIn/SignIn';
 import SignUp from '../../components/logIn/SignUp';
+import Logo from '../../components/logo/Logo';
 
 function Auth() {
   const [isUser, setIsUser] = useState(true);

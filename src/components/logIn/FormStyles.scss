@@ -1,9 +1,15 @@
+@import '../../mixins';
+
 .form {
   display: flex;
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+
+  @include largeScreen {
+    margin-bottom: 24px;
+  }
 
   &__input {
     position: relative;
@@ -11,17 +17,26 @@
     flex-direction: column;
     gap: 5.5px;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
     color: #FFFFFF;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     border-bottom: 1px solid #FFFFFF;
+
+    @include largeScreen {
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
 
     &__field {
       height: 25px;
       background-color: transparent;
       border: none;
-      font-size: 16px;
+      font-size: 14px;
       color: #FFFFFF;
+
+      @include largeScreen {
+        font-size: 16px;
+      }
 
       &:focus {
         outline: none;
@@ -35,17 +50,29 @@
       margin: 0;
       cursor: pointer;
       position: absolute;
-      right: 0px;
-      bottom: 5px;
-      width: 24px;
-      height: 24px;
+      right: 5px;
+      bottom: 12px;
+      width: 18px;
+      height: 18px;
+
+      @include largeScreen {
+        right: 0px;
+        bottom: 5px;
+        width: 24px;
+        height: 24px;
+      }
     }
 
     &__error {
       position: absolute;
-      left: 160px;
+      left: 105px;
       top: 25px;
       color: red;
+      
+      @include largeScreen {
+        left: 160px;
+        top: 25px;
+      }
     }
   }
 
@@ -59,8 +86,12 @@
     background-color: #539713;
     color: #FFFFFF;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     border: none;
     cursor: pointer;
+
+    @include largeScreen {
+      font-size: 16px;
+    }
   }
 }

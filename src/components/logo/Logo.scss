@@ -1,16 +1,30 @@
+@import '../../mixins';
+
 .logo {
-  margin: 48px 0 72px;
+  margin: 38px 0 52px;
+
+  @include largeScreen {
+    margin: 48px 0 72px;
+  }
 
   &__name {
     font-weight: 700;
-    font-size: 36px;
+    font-size: 30px;
     line-height: 150%;
     color: #FFFFFF;
+
+    @include largeScreen {
+      font-size: 36px;
+    }
   }
 
   &__unit {
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     color: #539713;
+
+    @include largeScreen {
+      font-size: 16px;
+    }
   }
 }

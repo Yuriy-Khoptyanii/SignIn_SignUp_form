@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 
 export const API_URL = 'https://expa.fly.dev';
 
@@ -9,30 +9,39 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem('accessToken');
 
+  const newconfig = { ...config };
   if (accessToken) {
-    config.headers = {
+    newconfig.headers = {
       ...config.headers,
       Authorization: `Bearer ${accessToken}`,
-    };
+    } as AxiosRequestHeaders;
   }
 
-  return config;
+  return newconfig;
 });
 
 api.interceptors.response.use(
   (config) => config,
   async (err) => {
-    const newAccessToken = await api.post('/auth/refresh', {
-      refreshToken: localStorage.getItem('refreshToken'),
-    });
+    if (
+      err?.response?.data?.statusCode === 401 &&
+      err?.response?.data?.message === 'Token has been revoked'
+    ) {
+      const newAccessToken = await api.post('/auth/refresh', {
+        refreshToken: localStorage.getItem('refreshToken'),
+      });
+      localStorage.setItem('accessToken', newAccessToken.data.accessToken);
 
-    return api.request({
-      ...err.config,
-      headers: {
-        ...err.config.headers,
-        Authorization: newAccessToken,
-      },
-    });
+      return api.request({
+        ...err.config,
+        headers: {
+          ...err.config.headers,
+          Authorization: newAccessToken.data.accessToken,
+        },
+      });
+    }
+
+    return err;
   },
 );
 

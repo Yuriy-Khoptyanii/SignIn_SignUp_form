@@ -2,40 +2,26 @@ import './FormStyles.scss';
 
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import api from '../../api';
 import eye from '../../icons/eye-off.svg';
+import { useAppDispatch } from '../../store';
+import { fetchSignIn } from '../../store/auth/thunks';
+import { SignInValues } from '../../types/allTypes';
 import { LoginSchema } from '../../yupValidation';
-
-type SignInValues = {
-  userName: string;
-  password: string;
-};
 
 function SignIn() {
   const [isVisiblePassword, setIsVisiblePassword] = useState(true);
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const submitSignIn = async (
     values: SignInValues,
     { resetForm }: { resetForm: () => void },
   ) => {
-    const { userName, password } = values;
-
-    try {
-      const tokens = await api.post('/auth/login', {
-        username: userName,
-        password: password,
-      });
-      const { accessToken, refreshToken } = tokens.data;
-
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-
-      console.log(tokens.data);
-    } catch (error) {
-      console.log('???????errror????');
-    }
-
+    await dispatch(fetchSignIn({ values }));
+    navigate('/home');
     resetForm();
   };
 

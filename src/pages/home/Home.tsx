@@ -1,10 +1,28 @@
 import './Home.scss';
 
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import Logo from '../../components/logo/Logo';
 import decor from '../../icons/Decor.svg';
 import imgHome from '../../icons/imageHome.png';
+import { clearUser } from '../../store/auth/slice';
+import { fetchLogOut } from '../../store/auth/thunks';
 
 function Home() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogOut = async () => {
+    dispatch(fetchLogOut())
+      .then(() => {
+        return dispatch(clearUser());
+      })
+      .then(() => {
+        navigate('/login');
+      });
+  };
+
   return (
     <div className="home">
       <Logo />
@@ -17,7 +35,9 @@ function Home() {
           Now you are on the main page. Soon we will provide you with detailed feedback on
           the result of your work
         </p>
-        <button className="btn--logOut">Log Out</button>
+        <button onClick={handleLogOut} type="button" className="btn--logOut">
+          Log Out
+        </button>
         <img className="imgHome" src={imgHome} alt="imgHome" />
       </div>
     </div>

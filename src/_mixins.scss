@@ -1,0 +1,5 @@
+@mixin largeScreen {
+  @media (min-width: 1440px) and (min-height: 900px) {
+    @content;
+  }
+}

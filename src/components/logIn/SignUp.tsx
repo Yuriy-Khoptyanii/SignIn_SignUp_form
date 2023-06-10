@@ -1,48 +1,28 @@
 import './FormStyles.scss';
 
-// import axios from 'axios';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import api from '../../api';
 import eye from '../../icons/eye-off.svg';
+import { useAppDispatch } from '../../store';
+import { fetchSignUp } from '../../store/auth/thunks';
+import { SignUpValues } from '../../types/allTypes';
 import { registerSchema } from '../../yupValidation';
-
-type SignUpValues = {
-  fullName: string;
-  userName: string;
-  password: string;
-  confirmPassword: string;
-};
 
 function SignUp() {
   const [isVisiblePassword, setIsVisiblePassword] = useState(true);
   const [isVisibleConfirmPassword, setIsVisibleConfirmPassword] = useState(true);
 
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const submitSignUp = async (
     values: SignUpValues,
     { resetForm }: { resetForm: () => void },
   ) => {
-    const { userName, password, fullName } = values;
-
-    try {
-      const response = await api.post('/auth/register', {
-        username: userName,
-        password: password,
-        displayName: fullName,
-      });
-      const tokens = await api.post('/auth/login', {
-        username: userName,
-        password: password,
-      });
-      const { accessToken, refreshToken } = tokens.data;
-
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-    } catch (error) {
-      console.log('???????errror????');
-    }
-
+    await dispatch(fetchSignUp({ values }));
+    navigate('/home');
     resetForm();
   };
 

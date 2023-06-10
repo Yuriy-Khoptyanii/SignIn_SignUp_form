@@ -1,21 +1,33 @@
+@import '../../mixins';
+
 .auth {
   display: flex;
   flex-direction: column;
 
-  padding: 0 48px;
+  padding: 0 35px;
 
-  width: 424px;
+  width: 300px;
   height: 100vh;
   background-color: #1D283A;
+
+  @include largeScreen {
+    padding: 0 48px;
+    width: 424px;
+  }
 }
 
 .title {
-  margin-bottom: 48px;
+  margin-bottom: 35px;
 
   font-weight: 700;
-  font-size: 56px;
+  font-size: 40px;
   line-height: 150%;
   color: #FFFFFF;
+
+  @include largeScreen {
+    margin-bottom: 48px;
+    font-size: 56px;
+  }
 }
 
 .switchForm {
@@ -25,9 +37,13 @@
 
   width: 100%;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 10px;
   line-height: 155%;
   color: #F1F2F1;
+
+  @include largeScreen {
+    font-size: 12px;
+  }
 
   &__btn {
     background: none;
