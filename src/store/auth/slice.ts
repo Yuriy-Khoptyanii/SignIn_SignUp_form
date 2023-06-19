@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
 import { InitialState, UserSelf } from '../../types/allTypes';
-import { fetchGetUser } from './thunks';
+import { fetchGetUser, fetchSignUp } from './thunks';
 
 const initialState: InitialState = {
   user: {
@@ -11,7 +11,8 @@ const initialState: InitialState = {
     id: 0,
     username: '',
   },
-  isUserLoaded: false,
+  isUserLoaded: true,
+  error: '',
 };
 
 export const userSlice = createSlice({
@@ -21,13 +22,26 @@ export const userSlice = createSlice({
     clearUser: () => initialState,
   },
   extraReducers: (builder) => {
+    builder.addCase(fetchGetUser.pending, (state: InitialState) => {
+      state.isUserLoaded = true;
+    });
     builder.addCase(
       fetchGetUser.fulfilled,
       (state: InitialState, action: PayloadAction<UserSelf>) => {
         state.user = action.payload;
-        state.isUserLoaded = true;
+        state.isUserLoaded = false;
       },
     );
+    builder.addCase(fetchGetUser.rejected, (state: InitialState) => {
+      state.isUserLoaded = false;
+    });
+    builder.addCase(fetchSignUp.rejected, (state: InitialState, action) => {
+      state.isUserLoaded = false;
+      state.error = action.payload?.message || '';
+    });
+    builder.addCase(fetchSignUp.pending, (state: InitialState) => {
+      state.error = '';
+    });
   },
 });
 

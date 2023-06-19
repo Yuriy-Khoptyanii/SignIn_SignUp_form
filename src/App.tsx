@@ -14,7 +14,7 @@ const ProtectedRoute: FC<{ children: JSX.Element }> = ({ children }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const isUserLoaded = useSelector((state: RootState) => state.user.isUserLoaded);
 
-  if (!isUserLoaded) {
+  if (isUserLoaded) {
     return <PacmanLoader color="#36d7b7" />;
   }
 

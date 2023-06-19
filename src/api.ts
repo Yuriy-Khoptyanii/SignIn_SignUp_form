@@ -41,7 +41,7 @@ api.interceptors.response.use(
       });
     }
 
-    return err;
+    throw err;
   },
 );
 

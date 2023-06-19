@@ -20,10 +20,18 @@ export interface UserSelf {
 export interface InitialState {
   user: UserSelf;
   isUserLoaded: boolean;
+  error: string;
 }
 
 export type Payload<T> = { values: T };
 
 export interface RegisterError {
   message: string;
+}
+export interface RegisterErrorNew {
+  response: {
+    data: {
+      message: string;
+    };
+  };
 }

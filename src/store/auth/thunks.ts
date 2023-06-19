@@ -4,6 +4,7 @@ import api from '../../api';
 import {
   Payload,
   RegisterError,
+  RegisterErrorNew,
   SignInValues,
   SignUpValues,
   UserSelf,
@@ -38,25 +39,27 @@ export const fetchSignIn = createAsyncThunk<string | undefined, Payload<SignInVa
   },
 );
 
-export const fetchSignUp = createAsyncThunk<string | undefined, Payload<SignUpValues>>(
-  'auth/signUp',
-  async ({ values }, { rejectWithValue, dispatch }) => {
-    try {
-      const { userName, password, fullName } = values;
+export const fetchSignUp = createAsyncThunk<
+  string | undefined,
+  Payload<SignUpValues>,
+  { rejectValue: { message: string } }
+>('auth/signUp', async ({ values }, { rejectWithValue, dispatch }) => {
+  try {
+    const { userName, password, fullName } = values;
 
-      await api.post('/auth/register', {
-        username: userName,
-        password: password,
-        displayName: fullName,
-      });
+    await api.post('/auth/register', {
+      username: userName,
+      password: password,
+      displayName: fullName,
+    });
 
-      await dispatch(fetchSignIn({ values }));
-    } catch (error) {
-      console.log('Error:', error);
-      return rejectWithValue((error as RegisterError).message);
-    }
-  },
-);
+    await dispatch(fetchSignIn({ values }));
+  } catch (error) {
+    return rejectWithValue({
+      message: (error as RegisterErrorNew).response.data.message,
+    });
+  }
+});
 
 export const fetchLogOut = createAsyncThunk('auth/logOut', async () => {
   await api.get('/auth/logout');
