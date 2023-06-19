@@ -17,6 +17,11 @@ export interface UserSelf {
   username: string;
 }
 
+export interface InitialState {
+  user: UserSelf;
+  isUserLoaded: boolean;
+}
+
 export type Payload<T> = { values: T };
 
 export interface RegisterError {

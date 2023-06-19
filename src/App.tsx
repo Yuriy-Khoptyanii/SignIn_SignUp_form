@@ -3,6 +3,7 @@ import './App.scss';
 import { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
+import PacmanLoader from 'react-spinners/PacmanLoader';
 
 import Auth from './pages/auth/Auth';
 import Home from './pages/home/Home';
@@ -10,8 +11,18 @@ import { RootState, useAppDispatch } from './store';
 import { fetchGetUser } from './store/auth/thunks';
 
 const ProtectedRoute: FC<{ children: JSX.Element }> = ({ children }) => {
-  const user = useSelector((state: RootState) => state.user);
-  return user.username.length > 0 ? children : <Navigate to="/auth" replace />;
+  const user = useSelector((state: RootState) => state.user.user);
+  const isUserLoaded = useSelector((state: RootState) => state.user.isUserLoaded);
+
+  if (!isUserLoaded) {
+    return <PacmanLoader color="#36d7b7" />;
+  }
+
+  if (user && user.username.length > 0) {
+    return children;
+  } else {
+    return <Navigate to="/auth" replace />;
+  }
 };
 
 const router = createHashRouter([
