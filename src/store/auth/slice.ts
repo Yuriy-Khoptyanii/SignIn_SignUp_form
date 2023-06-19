@@ -11,7 +11,7 @@ const initialState: InitialState = {
     id: 0,
     username: '',
   },
-  isUserLoaded: true,
+  isUserLoading: true,
   error: '',
 };
 
@@ -19,24 +19,28 @@ export const userSlice = createSlice({
   name: 'User',
   initialState,
   reducers: {
-    clearUser: () => initialState,
+    clearUser: (state: InitialState) => {
+      state.user = initialState.user;
+      state.isUserLoading = false;
+      state.error = '';
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchGetUser.pending, (state: InitialState) => {
-      state.isUserLoaded = true;
+      state.isUserLoading = true;
     });
     builder.addCase(
       fetchGetUser.fulfilled,
       (state: InitialState, action: PayloadAction<UserSelf>) => {
         state.user = action.payload;
-        state.isUserLoaded = false;
+        state.isUserLoading = false;
       },
     );
     builder.addCase(fetchGetUser.rejected, (state: InitialState) => {
-      state.isUserLoaded = false;
+      state.isUserLoading = false;
     });
     builder.addCase(fetchSignUp.rejected, (state: InitialState, action) => {
-      state.isUserLoaded = false;
+      state.isUserLoading = false;
       state.error = action.payload?.message || '';
     });
     builder.addCase(fetchSignUp.pending, (state: InitialState) => {

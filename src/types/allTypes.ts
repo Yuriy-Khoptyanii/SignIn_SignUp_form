@@ -19,7 +19,7 @@ export interface UserSelf {
 
 export interface InitialState {
   user: UserSelf;
-  isUserLoaded: boolean;
+  isUserLoading: boolean;
   error: string;
 }
 

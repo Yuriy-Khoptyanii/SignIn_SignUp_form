@@ -12,9 +12,9 @@ import { fetchGetUser } from './store/auth/thunks';
 
 const ProtectedRoute: FC<{ children: JSX.Element }> = ({ children }) => {
   const user = useSelector((state: RootState) => state.user.user);
-  const isUserLoaded = useSelector((state: RootState) => state.user.isUserLoaded);
+  const isUserLoading = useSelector((state: RootState) => state.user.isUserLoading);
 
-  if (isUserLoaded) {
+  if (isUserLoading) {
     return <PacmanLoader color="#36d7b7" />;
   }
 
